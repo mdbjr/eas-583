@@ -63,10 +63,11 @@ def is_ordered_block(w3, block_num):
 	block = w3.eth.get_block(block_num)
 	# Check if the transactions are ordered in descending order
 	ordered_desc = True
-	tx_prev_gas = w3.eth.get_transaction_receipt(block.transactions[0])['gasUsed']
+	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gas']
+	#print("block "+str(block_num) + " has "+str(len(block.transactions))+" transactions")
 	for tx in block.transactions[1:]:
-		tx_gas = w3.eth.get_transaction_receipt(tx)['gasUsed']
-		print(tx_gas)
+		tx_gas = w3.eth.get_transaction(tx)['gas']
+		#print(tx_gas)
 		if tx_gas > tx_prev_gas:
 			ordered_desc = False
 			break
@@ -74,10 +75,10 @@ def is_ordered_block(w3, block_num):
 			tx_prev_gas = tx_gas
 	# Check if the transactions are ordered in ascending order
 	ordered_asc = True
-	tx_prev_gas = w3.eth.get_transaction_receipt(block.transactions[0])['gasUsed']
+	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gas']
 	for tx in block.transactions[1:]:
-		tx_gas = w3.eth.get_transaction_receipt(tx)['gasUsed']
-		print(tx_gas)
+		tx_gas = w3.eth.get_transaction(tx)['gas']
+		#print(tx_gas)
 		if tx_gas < tx_prev_gas:
 			ordered_asc = False
 			break
