@@ -63,6 +63,8 @@ def is_ordered_block(w3, block_num):
 	block = w3.eth.get_block(block_num)
 	# Check if the transactions are ordered in descending order
 	ordered_desc = True
+	if len(block.transactions)<2:
+		return True
 	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gas']
 	#print("block "+str(block_num) + " has "+str(len(block.transactions))+" transactions")
 	for tx in block.transactions[1:]:
@@ -85,7 +87,7 @@ def is_ordered_block(w3, block_num):
 		else:
 			tx_prev_gas = tx_gas
 
-	if ordered_desc+ordered_asc:
+	if ordered_desc:#+ordered_asc:
 		ordered = True
 	else:
 		ordered = False
