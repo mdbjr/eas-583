@@ -65,10 +65,10 @@ def is_ordered_block(w3, block_num):
 	ordered_desc = True
 	if len(block.transactions)<2:
 		return True
-	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gas']
+	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gasPrice']
 	#print("block "+str(block_num) + " has "+str(len(block.transactions))+" transactions")
 	for tx in block.transactions[1:]:
-		tx_gas = w3.eth.get_transaction(tx)['gas']
+		tx_gas = w3.eth.get_transaction(tx)['gasPrice']
 		#print(tx_gas)
 		if tx_gas > tx_prev_gas:
 			ordered_desc = False
@@ -77,9 +77,9 @@ def is_ordered_block(w3, block_num):
 			tx_prev_gas = tx_gas
 	# Check if the transactions are ordered in ascending order
 	ordered_asc = True
-	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gas']
+	tx_prev_gas = w3.eth.get_transaction(block.transactions[0])['gasPrice']
 	for tx in block.transactions[1:]:
-		tx_gas = w3.eth.get_transaction(tx)['gas']
+		tx_gas = w3.eth.get_transaction(tx)['gasPrice']
 		#print(tx_gas)
 		if tx_gas < tx_prev_gas:
 			ordered_asc = False
@@ -146,3 +146,5 @@ if __name__ == "__main__":
 			print(f"Block {block_num} is ordered")
 		else:
 			print(f"Block {block_num} is not ordered")
+
+	#ordered = is_ordered_block(eth_w3, 8071350)
