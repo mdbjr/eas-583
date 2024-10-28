@@ -27,7 +27,8 @@ web3 = connect_to_eth()
 
 def get_ape_info(apeID):
 	assert isinstance(apeID,int), f"{apeID} is not an int"
-	assert 1 <= apeID, f"{apeID} must be at least 1"
+	assert 0 <= apeID, f"{apeID} must be at least 1"
+	assert 9999 > apeID, f"{apeID} must be less than or equal to 9999"
 
 	data = {'owner': "", 'image': "", 'eyes': "" }
 	
