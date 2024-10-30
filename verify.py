@@ -14,7 +14,7 @@ def signChallenge( challenge ):
     w3 = Web3()
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     #This is the only line you need to modify
-    sk = eth_account.Account.create().key.hex()#"YOUR SECRET KEY HERE"
+    sk = '7909e1cfd3d865eccdbcd9676804f16bedebba61963d7c44406ecb53e2653787'#"YOUR SECRET KEY HERE"
 
     acct = w3.eth.account.from_key(sk)
 
