@@ -4,6 +4,7 @@ import eth_account
 import random
 from web3.middleware import geth_poa_middleware
 import json
+from eth_hash.auto import keccak
 import hashlib
 
 import connect_to_eth
@@ -17,6 +18,7 @@ def signChallenge( challenge ):
     sk = '7909e1cfd3d865eccdbcd9676804f16bedebba61963d7c44406ecb53e2653787'#"YOUR SECRET KEY HERE"
 
     acct = w3.eth.account.from_key(sk)
+    print(acct.address)
 
     signed_message = w3.eth.account.sign_message( challenge, private_key = acct._private_key )
 
@@ -55,8 +57,9 @@ if __name__ == '__main__':
     sk = '7909e1cfd3d865eccdbcd9676804f16bedebba61963d7c44406ecb53e2653787'#"YOUR SECRET KEY HERE"
 
     acct = w3.eth.account.from_key(sk)
-    i=55
-    contract.functions.claim(acct.address, i.to_bytes(32, byteorder='big')).call()
+    nonce = "393857392092739"# Example nonce
+    hash_result = keccak(nonce.encode('utf-8'))
+    contract.functions.claim(acct.address,hash_result).call()
     if verifySig():
         print( f"You passed the challenge!" )
     else:
