@@ -5,7 +5,9 @@ import random
 from web3.middleware import geth_poa_middleware
 import json
 from eth_hash.auto import keccak
+import random
 import hashlib
+import secrets
 
 import connect_to_eth
 
@@ -45,8 +47,7 @@ if __name__ == '__main__':
     """
         Test your function
     """
-    #w3 = connect_to_eth.connect_to_eth()
-    w3 = Web3(Web3.HTTPProvider("https://api.avax-test.network/ext/bc/C/rpc"))
+    w3 = Web3(Web3.HTTPProvider("https://avalanche-fuji-c-chain-rpc.publicnode.com"))
     w3.middleware_onion.inject(geth_poa_middleware, layer=0)
     contract_address = "0x85ac2e065d4526FBeE6a2253389669a12318A412"
 
@@ -57,9 +58,12 @@ if __name__ == '__main__':
     sk = '7909e1cfd3d865eccdbcd9676804f16bedebba61963d7c44406ecb53e2653787'#"YOUR SECRET KEY HERE"
 
     acct = w3.eth.account.from_key(sk)
-    nonce = "393857392092739"# Example nonce
-    hash_result = keccak(nonce.encode('utf-8'))
-    contract.functions.claim(acct.address,hash_result).call()
+    max_nonce_value = 40
+
+    nonce = random.randint(0, max_nonce_value)
+    nonce = secrets.token_bytes(32)
+    nft_id = contract.functions.claim(acct.address,nonce).call()
+    contract.functions.ownerOf(nft_id).call()
     if verifySig():
         print( f"You passed the challenge!" )
     else:
