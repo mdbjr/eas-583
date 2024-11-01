@@ -61,9 +61,19 @@ if __name__ == '__main__':
     max_nonce_value = 40
 
     nonce = random.randint(0, max_nonce_value)
+
     nonce = secrets.token_bytes(32)
     nft_id = contract.functions.claim(acct.address,nonce).call()
     contract.functions.ownerOf(nft_id).call()
+
+    tx_raw = contract.functions.claim(acct.address, nonce).build_transaction({
+        "from": acct.address,
+        "nonce": w3.eth.get_transaction_count(acct.address),
+    })
+
+    signed_tx = w3.eth.account.sign_transaction(tx_raw, private_key=acct.key)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+    w3.eth.wait_for_transaction_receipt(tx_hash)
     if verifySig():
         print( f"You passed the challenge!" )
     else:
