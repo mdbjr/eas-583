@@ -20,8 +20,9 @@ def get_keys(challenge,keyId = 0, filename = "eth_mnemonic.txt"):
 	#YOUR CODE HERE
     acct = w3.eth.account.create()
     eth_addr = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'#acct.key.hex()
-    assert eth_account.Account.recover_message(msg,signature=sig.signature.hex()) == eth_addr, f"Failed to sign message properly"
     sig = w3.eth.account.sign_message(msg, private_key=eth_addr)
+    assert eth_account.Account.recover_message(msg,signature=sig.signature.hex()) == eth_addr, f"Failed to sign message properly"
+
     #return sig, acct #acct contains the private key
     return sig, eth_addr
 
