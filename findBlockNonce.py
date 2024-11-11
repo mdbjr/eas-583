@@ -23,16 +23,16 @@ def mine_block(k, prev_hash, rand_lines):
     updated_data = (prev_hash + ''.join(rand_lines).encode('utf-8'))
 
     bit_string = ''
-    iter_count = 0
-    nonce = 0
+    iter_count = 1
+    nonce = iter_count.to_bytes((iter_count.bit_length() + 7) // 8, byteorder='big')
     while (len(bit_string)==0) |  (bit_string[-k:]!='0'*k):
         iter_count+=1
-        new_hash = hashlib.sha256(updated_data + nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big'))
+        new_hash = hashlib.sha256(updated_data + nonce)
         bit_string = bin(int(new_hash.hexdigest(), 16))[2:]
-        nonce+=1
-    #print('ITER COUNT:' + str(iter_count))
+        nonce = iter_count.to_bytes((iter_count.bit_length() + 7) // 8, byteorder='big')
+    print('ITER COUNT:' + str(iter_count))
     print('done')
-    nonce = nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big')
+    #nonce = nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big')
 
     assert isinstance(nonce, bytes), 'nonce should be of type bytes'
     return nonce
@@ -68,4 +68,4 @@ if __name__ == '__main__':
 
     rand_lines = get_random_lines(filename, num_lines)
     nonce = mine_block(diff, prev_hash, rand_lines)
-    print(nonce)
+    print(int.from_bytes(nonce, byteorder='big', signed=False))
