@@ -20,7 +20,7 @@ def mine_block(k, prev_hash, rand_lines):
 
     # TODO your code to find a nonce here
 
-    updated_data = (prev_hash + ''.join(rand_lines)).encode('utf-8')
+    updated_data = (prev_hash + ''.join(rand_lines).encode('utf-8'))
 
     bit_string = ''
     iter_count = 0
