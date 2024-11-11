@@ -40,7 +40,7 @@ def merkle_assignment():
         tx_hash = '0x'
         # TODO, when you are ready to attempt to claim a prime (and pay gas fees),
         #  complete this method and run your code with the following line un-commented
-        #tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
+        tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
 
 
 def generate_primes(num_primes):
@@ -123,7 +123,7 @@ def prove_merkle(merkle_tree, random_indx):
     else:
         merkle_proof.append(merkle_tree[0][random_indx+1])
     sorted_pair = sorted([merkle_tree[0][random_indx], merkle_proof[0]])
-    next_hash = bytes(hash_pair(sorted_pair[0], sorted_pair[1]))
+    next_hash = hash_pair(sorted_pair[0], sorted_pair[1])
     last_layer = merkle_tree[0]
     next_layer = merkle_tree[1]
     cur_index = random_indx
@@ -132,15 +132,15 @@ def prove_merkle(merkle_tree, random_indx):
         i+=1
         index_of_hash = next_layer.index(next_hash)
         if index_of_hash % 2 == 1:
-            merkle_proof.append(bytes(next_layer[index_of_hash-1]))
+            merkle_proof.append(next_layer[index_of_hash-1])
             a = next_layer[index_of_hash-1]
             b = next_layer[index_of_hash]
         else:
-            merkle_proof.append(bytes(next_layer[index_of_hash - 1]))
+            merkle_proof.append(next_layer[index_of_hash - 1])
             a = next_layer[index_of_hash]
             b = next_layer[index_of_hash+1]
         sorted_pair = sorted([a, b])
-        next_hash = bytes(hash_pair(sorted_pair[0], sorted_pair[1]))
+        next_hash = hash_pair(sorted_pair[0], sorted_pair[1])
         #if cur_index % 2 == 1:
         #    next_layer_index = int((cur_index-1)/2)
         #else:
@@ -155,7 +155,7 @@ def prove_merkle(merkle_tree, random_indx):
         #sibling_hashes.append(bytes_pair)
         #last_layer = cur_layer
         next_layer = merkle_tree[i+1]
-    merkle_proof.append(bytes(merkle_tree[i+1][0])) #append root
+    #merkle_proof.append(bytes(merkle_tree[i+1][0])) #append root
 
     #print('stop')
     return merkle_proof
