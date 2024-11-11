@@ -17,8 +17,8 @@ def merkle_assignment():
         methods called by this method to generate the proof.
     """
     # Generate the list of primes as integers
-    #num_of_primes = 8192
-    num_of_primes = 8
+    num_of_primes = 8192
+    #num_of_primes = 8
     primes = generate_primes(num_of_primes)
 
     # Create a version of the list of primes in bytes32 format
