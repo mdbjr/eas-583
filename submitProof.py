@@ -17,9 +17,8 @@ def merkle_assignment():
         methods called by this method to generate the proof.
     """
     # Generate the list of primes as integers
-    num_of_primes = 8191
-    #num_of_primes = 512
-    primes = [2]+generate_primes(num_of_primes)
+    num_of_primes = 8192
+    primes = generate_primes(num_of_primes)
 
     # Create a version of the list of primes in bytes32 format
     leaves = convert_leaves(primes)
@@ -28,7 +27,7 @@ def merkle_assignment():
     tree = build_merkle(leaves)
 
     # Select a random leaf and create a proof for that leaf
-    random_leaf_index = random.randint(0, num_of_primes) #TODO generate a random index from primes to claim (0 is already claimed)
+    random_leaf_index = random.randint(0, num_of_primes-1) #TODO generate a random index from primes to claim (0 is already claimed)
     proof = prove_merkle(tree, random_leaf_index)
 
     # This is the same way the grader generates a challenge for sign_challenge()
@@ -40,7 +39,7 @@ def merkle_assignment():
         tx_hash = '0x'
         # TODO, when you are ready to attempt to claim a prime (and pay gas fees),
         #  complete this method and run your code with the following line un-commented
-        # tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
+        tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
 
 
 def generate_primes(num_primes):
@@ -58,11 +57,11 @@ def generate_primes(num_primes):
                 factors_of_i.append(j)
         if len(factors_of_i)==2:
             primes_list.append(i)
-            #print(str(i)+" is prime")
-            #print("GOT "+str(len(primes_list))+" primes")
+            print(str(i)+" is prime")
+            print("GOT "+str(len(primes_list))+" primes")
         i+=1
 
-    return primes_list
+    return [2]+primes_list[0:-1]
 
 
 def convert_leaves(primes_list):
@@ -89,7 +88,7 @@ def build_merkle(leaves):
     """
     #TODO YOUR CODE HERE
     if len(leaves)%2==1:
-        leaves.append(leaves[-1].copy())
+        leaves.append(leaves[-1])
     tree = []
     tree.append(leaves)
     len_last_layer = len(leaves)
@@ -98,8 +97,8 @@ def build_merkle(leaves):
         next_layer = []
         for i in range(0, len(last_layer), 2):
             pair_to_hash = sorted([last_layer[i], last_layer[i+1]])
-            hash = hash_pair(last_layer[i], last_layer[i+1])
-            next_layer.append(hash)
+            hash = hash_pair(pair_to_hash[0], pair_to_hash[1])
+            next_layer.append(bytes(hash))
         tree.append(next_layer)
         len_last_layer = len(next_layer)
         last_layer = next_layer.copy()
@@ -117,24 +116,41 @@ def prove_merkle(merkle_tree, random_indx):
     """
     merkle_proof = []
     # TODO YOUR CODE HERE
-    merkle_proof.append(merkle_tree[0][random_indx])
+    sibling_hashes = []
+    if random_indx % 2 == 1:
+        merkle_proof.append(merkle_tree[0][random_indx-1])
+    else:
+        merkle_proof.append(merkle_tree[0][random_indx+1])
+    sorted_pair = sorted([merkle_tree[0][random_indx], merkle_proof[0]])
+    next_hash = bytes(hash_pair(sorted_pair[0], sorted_pair[1]))
     last_layer = merkle_tree[0]
     next_layer = merkle_tree[1]
-    cur_layer_index = random_indx
+    cur_index = random_indx
     i = 0
     while len(next_layer)>1:
         i+=1
-        next_layer = merkle_tree[i]
-        if cur_layer_index % 2 == 1:
-            next_layer_index = int((cur_layer_index-1)/2)
+        index_of_hash = next_layer.index(next_hash)
+        if index_of_hash % 2 == 1:
+            merkle_proof.append(next_layer[index_of_hash-1])
         else:
-            next_layer_index = int(cur_layer_index / 2)
-        cur_layer_index = next_layer_index
-        cur_layer = merkle_tree[i]
-        merkle_proof.append(cur_layer[cur_layer_index])
-        last_layer = cur_layer
+            merkle_proof.append(next_layer[index_of_hash - 1])
+        #if cur_index % 2 == 1:
+        #    next_layer_index = int((cur_index-1)/2)
+        #else:
+        #    next_layer_index = int(cur_index / 2)
+        #cur_layer_index = next_layer_index
+        #cur_layer = merkle_tree[i]
+        #cur_index = next_layer_index
+        #bytes_pair = []
+        #bytes_pair.append(cur_layer[cur_layer_index])
+        #bytes_pair.append(cur_layer[cur_layer_index-1])
+        #bytes_pair = sorted(bytes_pair)
+        #sibling_hashes.append(bytes_pair)
+        #last_layer = cur_layer
+        next_layer = merkle_tree[i+1]
+    #merkle_proof.append(merkle_tree[i+1][0]) #append root
 
-
+    print('stop')
     return merkle_proof
 
 
@@ -180,8 +196,8 @@ def send_signed_msg(proof, random_leaf):
         "leaf": random_leaf
 
     })
-    tx_hash = 'placeholder'
-
+    signed_tx = w3.eth.account.sign_transaction(tx_raw, private_key=acct.key)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
     return tx_hash
 
 
