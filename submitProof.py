@@ -57,8 +57,8 @@ def generate_primes(num_primes):
                 factors_of_i.append(j)
         if len(factors_of_i)==2:
             primes_list.append(i)
-            print(str(i)+" is prime")
-            print("GOT "+str(len(primes_list))+" primes")
+            #print(str(i)+" is prime")
+            #print("GOT "+str(len(primes_list))+" primes")
         i+=1
 
     return [2]+primes_list[0:-1]
@@ -98,7 +98,7 @@ def build_merkle(leaves):
         for i in range(0, len(last_layer), 2):
             pair_to_hash = sorted([last_layer[i], last_layer[i+1]])
             hash = hash_pair(pair_to_hash[0], pair_to_hash[1])
-            next_layer.append(bytes(hash))
+            next_layer.append(hash)
         tree.append(next_layer)
         len_last_layer = len(next_layer)
         last_layer = next_layer.copy()
