@@ -17,8 +17,8 @@ def merkle_assignment():
         methods called by this method to generate the proof.
     """
     # Generate the list of primes as integers
-    num_of_primes = 8192
-    #num_of_primes = 8
+    #num_of_primes = 8192
+    num_of_primes = 8
     primes = generate_primes(num_of_primes)
 
     # Create a version of the list of primes in bytes32 format
@@ -132,11 +132,11 @@ def prove_merkle(merkle_tree, random_indx):
         i+=1
         index_of_hash = next_layer.index(next_hash)
         if index_of_hash % 2 == 1:
-            merkle_proof.append(next_layer[index_of_hash-1])
+            merkle_proof.append(bytes(next_layer[index_of_hash-1]))
             a = next_layer[index_of_hash-1]
             b = next_layer[index_of_hash]
         else:
-            merkle_proof.append(next_layer[index_of_hash - 1])
+            merkle_proof.append(bytes(next_layer[index_of_hash - 1]))
             a = next_layer[index_of_hash]
             b = next_layer[index_of_hash+1]
         sorted_pair = sorted([a, b])
@@ -155,7 +155,7 @@ def prove_merkle(merkle_tree, random_indx):
         #sibling_hashes.append(bytes_pair)
         #last_layer = cur_layer
         next_layer = merkle_tree[i+1]
-    #merkle_proof.append(merkle_tree[i+1][0]) #append root
+    merkle_proof.append(bytes(merkle_tree[i+1][0])) #append root
 
     #print('stop')
     return merkle_proof
