@@ -157,7 +157,7 @@ def prove_merkle(merkle_tree, random_indx):
         next_layer = merkle_tree[i+1]
     #merkle_proof.append(merkle_tree[i+1][0]) #append root
 
-    print('stop')
+    #print('stop')
     return merkle_proof
 
 
