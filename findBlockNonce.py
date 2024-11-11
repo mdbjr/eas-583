@@ -32,7 +32,7 @@ def mine_block(k, prev_hash, rand_lines):
         nonce+=1
     #print('ITER COUNT:' + str(iter_count))
     print('done')
-    nonce = str(nonce).encode('utf-8')
+    nonce = nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big')
 
     assert isinstance(nonce, bytes), 'nonce should be of type bytes'
     return nonce
