@@ -28,7 +28,7 @@ def merkle_assignment():
     tree = build_merkle(leaves)
 
     # Select a random leaf and create a proof for that leaf
-    random_leaf_index = random.randint(0, num_of_primes-1) #TODO generate a random index from primes to claim (0 is already claimed)
+    random_leaf_index = 5# random.randint(0, num_of_primes-1) #TODO generate a random index from primes to claim (0 is already claimed)
     proof = prove_merkle(tree, random_leaf_index)
 
     # This is the same way the grader generates a challenge for sign_challenge()
@@ -136,7 +136,7 @@ def prove_merkle(merkle_tree, random_indx):
             a = next_layer[index_of_hash-1]
             b = next_layer[index_of_hash]
         else:
-            merkle_proof.append(next_layer[index_of_hash - 1])
+            merkle_proof.append(next_layer[index_of_hash + 1])
             a = next_layer[index_of_hash]
             b = next_layer[index_of_hash+1]
         sorted_pair = sorted([a, b])
@@ -197,6 +197,16 @@ def send_signed_msg(proof, random_leaf):
 
     # TODO YOUR CODE HERE
     contract = w3.eth.contract(address=address, abi=abi)
+
+    string_of_hashes = []
+    string_of_hashes.append(proof[0])
+    next_hash = hash_pair(random_leaf, proof[0])
+    string_of_hashes.append(next_hash)
+    for j in range(1, len(proof)):
+        sorted_pair = sorted([next_hash, proof[j]])
+        prev_hash = next_hash
+        next_hash = hash_pair(sorted_pair[0], sorted_pair[1])
+        string_of_hashes.append(next_hash)
 
     tx_raw = contract.functions.submit(proof, random_leaf).build_transaction({
         "proof": proof,
