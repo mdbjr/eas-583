@@ -27,9 +27,10 @@ def mine_block(k, prev_hash, rand_lines):
     nonce = iter_count.to_bytes((iter_count.bit_length() + 7) // 8, byteorder='big')
     while (len(bit_string)==0) |  (bit_string[-k:]!='0'*k):
         iter_count+=1
+        nonce = iter_count.to_bytes((iter_count.bit_length() + 7) // 8, byteorder='big')
         new_hash = hashlib.sha256(updated_data + nonce)
         bit_string = bin(int(new_hash.hexdigest(), 16))[2:]
-        nonce = iter_count.to_bytes((iter_count.bit_length() + 7) // 8, byteorder='big')
+
     print('ITER COUNT:' + str(iter_count))
     print('done')
     #nonce = nonce.to_bytes((nonce.bit_length() + 7) // 8, byteorder='big')
