@@ -28,7 +28,7 @@ def merkle_assignment():
     tree = build_merkle(leaves)
 
     # Select a random leaf and create a proof for that leaf
-    random_leaf_index = 5# random.randint(0, num_of_primes-1) #TODO generate a random index from primes to claim (0 is already claimed)
+    random_leaf_index = 7862 #random.randint(0, num_of_primes-1) #TODO generate a random index from primes to claim (0 is already claimed)
     proof = prove_merkle(tree, random_leaf_index)
 
     # This is the same way the grader generates a challenge for sign_challenge()
@@ -40,7 +40,7 @@ def merkle_assignment():
         tx_hash = '0x'
         # TODO, when you are ready to attempt to claim a prime (and pay gas fees),
         #  complete this method and run your code with the following line un-commented
-        #tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
+        tx_hash = send_signed_msg(proof, leaves[random_leaf_index])
 
 
 def generate_primes(num_primes):
@@ -209,10 +209,15 @@ def send_signed_msg(proof, random_leaf):
         string_of_hashes.append(next_hash)
 
     tx_raw = contract.functions.submit(proof, random_leaf).build_transaction({
-        "proof": proof,
-        "leaf": random_leaf
+        #"proof": proof,
+        #"leaf": random_leaf,
+        #"to": contract.address,
+        "from": acct.address,
+        "nonce": w3.eth.get_transaction_count(acct.address),
 
     })
+    url = "https://data-seed-prebsc-1-s1.binance.org:8545/"  # FILL THIS IN
+    w3 = Web3(HTTPProvider(url))
     signed_tx = w3.eth.account.sign_transaction(tx_raw, private_key=acct.key)
     tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
     return tx_hash
