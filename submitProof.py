@@ -3,8 +3,10 @@ import random
 import string
 import json
 from pathlib import Path
-from web3 import Web3
-from web3.middleware import geth_poa_middleware  # Necessary for POA chains
+from web3 import Web3, EthereumTesterProvider
+from web3.middleware import geth_poa_middleware
+from web3.providers.rpc import HTTPProvider
+from eth_account.messages import encode_defunct
 
 
 def merkle_assignment():
@@ -15,8 +17,9 @@ def merkle_assignment():
         methods called by this method to generate the proof.
     """
     # Generate the list of primes as integers
-    num_of_primes = 8192
-    primes = generate_primes(num_of_primes)
+    num_of_primes = 8191
+    #num_of_primes = 512
+    primes = [2]+generate_primes(num_of_primes)
 
     # Create a version of the list of primes in bytes32 format
     leaves = convert_leaves(primes)
@@ -25,7 +28,7 @@ def merkle_assignment():
     tree = build_merkle(leaves)
 
     # Select a random leaf and create a proof for that leaf
-    random_leaf_index = 0 #TODO generate a random index from primes to claim (0 is already claimed)
+    random_leaf_index = random.randint(0, num_of_primes) #TODO generate a random index from primes to claim (0 is already claimed)
     proof = prove_merkle(tree, random_leaf_index)
 
     # This is the same way the grader generates a challenge for sign_challenge()
@@ -46,8 +49,18 @@ def generate_primes(num_primes):
         returns list (with length n) of primes (as ints) in ascending order
     """
     primes_list = []
-
-    #TODO YOUR CODE HERE
+    i = 2
+    while len(primes_list)<num_primes:
+        factors_of_i = []
+        for j in [1,2]+primes_list+[i]:
+            remainder = i % j
+            if remainder == 0:
+                factors_of_i.append(j)
+        if len(factors_of_i)==2:
+            primes_list.append(i)
+            #print(str(i)+" is prime")
+            #print("GOT "+str(len(primes_list))+" primes")
+        i+=1
 
     return primes_list
 
@@ -59,8 +72,12 @@ def convert_leaves(primes_list):
     """
 
     # TODO YOUR CODE HERE
+    bytes_list = []
+    for i in primes_list:
+        bytes_value = i.to_bytes(32, byteorder='big')  # 'big' for big-endian format
+        bytes_list.append(bytes_value)
 
-    return []
+    return bytes_list
 
 
 def build_merkle(leaves):
@@ -70,9 +87,23 @@ def build_merkle(leaves):
         tree[1] is the parent hashes, and so on until tree[n] which is the root hash
         the root hash produced by the "hash_pair" helper function
     """
-
     #TODO YOUR CODE HERE
+    if len(leaves)%2==1:
+        leaves.append(leaves[-1].copy())
     tree = []
+    tree.append(leaves)
+    len_last_layer = len(leaves)
+    last_layer = leaves.copy()
+    while len_last_layer>1:
+        next_layer = []
+        for i in range(0, len(last_layer), 2):
+            pair_to_hash = sorted([last_layer[i], last_layer[i+1]])
+            hash = hash_pair(last_layer[i], last_layer[i+1])
+            next_layer.append(hash)
+        tree.append(next_layer)
+        len_last_layer = len(next_layer)
+        last_layer = next_layer.copy()
+
 
     return tree
 
@@ -86,6 +117,23 @@ def prove_merkle(merkle_tree, random_indx):
     """
     merkle_proof = []
     # TODO YOUR CODE HERE
+    merkle_proof.append(merkle_tree[0][random_indx])
+    last_layer = merkle_tree[0]
+    next_layer = merkle_tree[1]
+    cur_layer_index = random_indx
+    i = 0
+    while len(next_layer)>1:
+        i+=1
+        next_layer = merkle_tree[i]
+        if cur_layer_index % 2 == 1:
+            next_layer_index = int((cur_layer_index-1)/2)
+        else:
+            next_layer_index = int(cur_layer_index / 2)
+        cur_layer_index = next_layer_index
+        cur_layer = merkle_tree[i]
+        merkle_proof.append(cur_layer[cur_layer_index])
+        last_layer = cur_layer
+
 
     return merkle_proof
 
@@ -104,7 +152,10 @@ def sign_challenge(challenge):
     eth_sk = acct.key
 
     # TODO YOUR CODE HERE
-    eth_sig_obj = 'placeholder'
+    url = "https://eth-mainnet.g.alchemy.com/v2/FMNPnXuLyjNygdKSWThkEHGMyXg7ihZV"  # FILL THIS IN
+    w3 = Web3(HTTPProvider(url))
+    eth_sig_obj = w3.eth.account.sign_message(encode_defunct(text=challenge), private_key=eth_sk)
+    #eth_sig_obj = 'placeholder'
 
     return addr, eth_sig_obj.signature.hex()
 
@@ -122,6 +173,13 @@ def send_signed_msg(proof, random_leaf):
     w3 = connect_to(chain)
 
     # TODO YOUR CODE HERE
+    contract = w3.eth.contract(address=address, abi=abi)
+
+    tx_raw = contract.functions.submit(proof, random_leaf).build_transaction({
+        "proof": proof,
+        "leaf": random_leaf
+
+    })
     tx_hash = 'placeholder'
 
     return tx_hash
