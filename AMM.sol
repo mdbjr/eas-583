@@ -63,7 +63,23 @@ contract AMM is AccessControl{
 			qtyA = ERC20(tokenA).balanceOf(address(this));
 			qtyB = ERC20(tokenB).balanceOf(address(this));
 
-			swapAmt = qtyB - invariant/(qtyA+((10000-feebps)/10000)*sellAmount);
+      emit LogMessage("Invariant is:");
+      emit LogNumber(invariant);
+
+      emit LogMessage("TokenB Balance is:");
+      emit LogNumber(ERC20(tokenB).balanceOf(address(this)));
+
+      emit LogMessage("TokenA Balance is:");
+      emit LogNumber(ERC20(tokenA).balanceOf(address(this)));
+
+      emit LogMessage("sellAmount is:");
+      emit LogNumber(sellAmount);
+
+
+
+			swapAmt = (qtyB+5)/1000 ;//- invariant/(qtyA+((10000-feebps)/10000)*sellAmount);
+	    emit LogMessage("Swap Amount is:");
+      emit LogNumber(swapAmt);
 			require(swapAmt<= qtyB, 'Not enough tokens to transfer to seller');
 			require(qtyA!=0, 'must have A tokens');
 			require(qtyB!=0, 'must have B tokens');
@@ -71,15 +87,22 @@ contract AMM is AccessControl{
 			ERC20(tokenB).transfer(msg.sender,swapAmt);
       emit LogMessage("TokenA Balance is:");
       emit LogNumber(ERC20(tokenA).balanceOf(address(this)));
-      emit LogMessage("TokenB Balance is:");
-      emit LogNumber(ERC20(tokenB).balanceOf(address(this)));
+
 		}
 
 		if (sellToken==tokenB){
 			qtyA = ERC20(tokenA).balanceOf(address(this));
 			qtyB = ERC20(tokenB).balanceOf(address(this));
 
-			swapAmt = qtyA - invariant/(qtyB+((10000-feebps)/10000)*sellAmount);
+      emit LogMessage("Invariant is:");
+      emit LogNumber(invariant);
+
+      emit LogMessage("TokenA Balance is:");
+      emit LogNumber(ERC20(tokenA).balanceOf(address(this)));
+
+			swapAmt = (qtyA +5)/1000;// - invariant/(qtyB+((10000-feebps)/10000)*sellAmount);
+	    emit LogMessage("Swap Amount is:");
+      emit LogNumber(swapAmt);
 			require(swapAmt<= qtyA, 'Not enough tokens to transfer to seller');
 			require(qtyA!=0, 'must have A tokens');
 			require(qtyB!=0, 'must have B tokens');
