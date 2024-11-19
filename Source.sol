@@ -49,17 +49,20 @@ contract Source is AccessControl {
 		emit DebugLog("Message sender's token balance After:", token.balanceOf(msg.sender));
 		emit DebugLog("Source's token balance before:", token.balanceOf(address(this)));
 		emit DebugLog("Message recipient's token balance After:", token.balanceOf(_recipient));
-		emit Deposit(msg.sender, _recipient, _amount);
+		emit Deposit(_token, _recipient, _amount);
 
 	}
 
 	function withdraw(address _token, address _recipient, uint256 _amount ) onlyRole(WARDEN_ROLE) public {
 		//YOUR CODE HERE
-		require(hasRole(ADMIN_ROLE, address(this)),  "Caller is not the owner");
-		require(ERC20(_token).balanceOf(msg.sender)>=_amount, "Balance too low to deposit this amount");
+		require(hasRole(WARDEN_ROLE, msg.sender),  "Caller is not the owner");
+    require(_recipient != address(0), "Recipient cannot be the zero address");
+  	require(_amount > 0, "Amount must be greater than zero");
+		//require(ERC20(_token).balanceOf(msg.sender)>=_amount, "Balance too low to deposit this amount");
 
 		ERC20 token = ERC20(_token);
-		token.transfer(_recipient, _amount);
+    bool success = token.transfer(_recipient, _amount);
+    require(success, "Token transfer failed");
 		emit Withdrawal(_token, _recipient, _amount);
 	}
 
