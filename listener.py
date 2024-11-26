@@ -36,7 +36,7 @@ def scanBlocks(chain,start_block,end_block,contract_address):
     contract = w3.eth.contract(address=contract_address, abi=DEPOSIT_ABI)
 
     arg_filter = {}
-
+    dicts = []
     if start_block == "latest":
         start_block = w3.eth.get_block_number()
     if end_block == "latest":
@@ -57,20 +57,43 @@ def scanBlocks(chain,start_block,end_block,contract_address):
         events = event_filter.get_all_entries()
         #print( f"Got {len(events)} entries for block {block_num}" )
         ##// YOUR CODE HERE
-        print('stop')
+        #print('stop')
+        if len(events) > 0:
+            for event in events:
+                event_dict = {'chain': chain,
+                              'token': event['args']['token'],
+                              'recipient': event['args']['recipient'],
+                              'amount': event['args']['amount'],
+                              'transactionHash': event['transactionHash'],
+                              'address': event['address']}
+                dicts.append(event_dict)
 
     else:
         for block_num in range(start_block,end_block+1):
             event_filter = contract.events.Deposit.create_filter(fromBlock=block_num,toBlock=block_num,argument_filters=arg_filter)
             events = event_filter.get_all_entries()
-            #print( f"Got {len(events)} entries for block {block_num}" )
+
             ##// YOUR CODE HERE
-            print('stop')
+            #print('stop')
+            if len(events)>0:
+                print( f"Got {len(events)} entries for block {block_num}" )
+                for event in events:
+                    event_dict = {'chain': chain,
+                                  'token': event['args']['token'],
+                                  'recipient': event['args']['recipient'],
+                                  'amount': event['args']['amount'],
+                                  'transactionHash': event['transactionHash'],
+                                  'address': event['address']}
+                    dicts.append(event_dict)
+    df = pd.DataFrame(dicts)
+    df.to_csv('deposit_logs.csv', index=False)
 
 
-if __name__=='__main__':
-    chain = 'avax'
-    start_block = 20
-    end_block = 80
-    contract_address = Web3.to_checksum_address("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")
-    scanBlocks(chain, start_block, end_block, contract_address)
+
+
+#if __name__=='__main__':
+#    chain = 'avax'
+#    start_block = 36834549
+#    end_block = 36834579
+#    contract_address = "0x2849A1F9e4700BEe779232396FD803cdcA7d0cde"
+#    scanBlocks(chain, start_block, end_block, contract_address)
