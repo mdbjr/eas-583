@@ -82,7 +82,7 @@ def scanBlocks(chain,start_block,end_block,contract_address):
                                   'token': event['args']['token'],
                                   'recipient': event['args']['recipient'],
                                   'amount': event['args']['amount'],
-                                  'transactionHash': event['transactionHash'],
+                                  'transactionHash': event['transactionHash'].hex(),
                                   'address': event['address']}
                     dicts.append(event_dict)
     df = pd.DataFrame(dicts)
