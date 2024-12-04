@@ -105,7 +105,7 @@ def scanBlocks(chain):
         arg_filter = {}
         print("LISTENING FOR DEPOSITS ON BLOCKS " + str(end_block1) + " to " + str(start_block1))
         #event_filter = contract.events.Deposit.create_filter(fromBlock=start_block, toBlock=end_block,argument_filters=arg_filter)
-        event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1-5, toBlock=start_block1+2, argument_filters=arg_filter)
+        event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
         events1 = event_filter1.get_all_entries()
         print(str(len(events1)) + " Deposit events found on source contract")
 
