@@ -77,10 +77,13 @@ def scanBlocks(chain):
         w3_1 = Web3(HTTPProvider(url1))
         w3_2 = Web3(HTTPProvider(url2))
 
+        w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
+        w3_2.middleware_onion.inject(geth_poa_middleware, layer=0)
+
         # The second section requires you to inject middleware into your w3 object and
         # create a contract object. Read more on the docs pages at https://web3py.readthedocs.io/en/stable/middleware.html
         # and https://web3py.readthedocs.io/en/stable/web3.contract.html
-        w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
+        #w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         if w3_1.is_connected():
             print("Connected to Avax Testnet")
@@ -89,19 +92,29 @@ def scanBlocks(chain):
         contract1 = w3_1.eth.contract(address=address1, abi=abi1)
         contract2 = w3_2.eth.contract(address=address2, abi=abi2)
 
-        start_block = w3_1.eth.get_block_number()
-        end_block = start_block - 5
+        start_block1 = w3_1.eth.get_block_number()
+        end_block1 = start_block1 - 5
+
+        start_block2 = w3_2.eth.get_block_number()
+        end_block2 = start_block2 - 5
+
         arg_filter = {}
-        event_filter = contract1.events.Deposit.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
-        events = event_filter.get_all_entries()
+        event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
+        events1 = event_filter1.get_all_entries()
+        print(str(len(events1)) + " Deposit events found on source contract")
+
+        event_filter2 = contract2.events.Unwrap.create_filter(fromBlock=end_block2, toBlock=start_block2, argument_filters=arg_filter)
+        events2 = event_filter2.get_all_entries()
+        print(str(len(events2)) + " Unwrap events found on destination contract")
+
         #print('stop')
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
 
         # acct = get_account()
         acct = w3_2.eth.account.from_key(sk)
-        if len(events)>0:
-            print(str(len(events))+" events found on source contract")
-            for event in events:
+        if len(events1)>0:
+
+            for event in events1:
                 event_dict = {'chain': chain,
                               'token': event['args']['token'],
                               'recipient': event['args']['recipient'],
@@ -145,6 +158,7 @@ def scanBlocks(chain):
         # create a contract object. Read more on the docs pages at https://web3py.readthedocs.io/en/stable/middleware.html
         # and https://web3py.readthedocs.io/en/stable/web3.contract.html
         w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
+        w3_2.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         if w3_1.is_connected():
             print("Connected to BSC Testnet")
@@ -153,12 +167,19 @@ def scanBlocks(chain):
         contract1 = w3_1.eth.contract(address=address1, abi=abi1)
         contract2 = w3_2.eth.contract(address=address2, abi=abi2)
 
-        start_block = w3_1.eth.get_block_number()
-        end_block = start_block - 5
+        start_block1 = w3_1.eth.get_block_number()
+        end_block1 = start_block1 - 5
+        start_block2 = w3_2.eth.get_block_number()
+        end_block2 = start_block2 - 5
         arg_filter = {}
-        event_filter = contract1.events.Unwrap.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
-        events = event_filter.get_all_entries()
-        print(str(len(events))+" events found on destination contract")
+        event_filter1 = contract1.events.Unwrap.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
+        events1 = event_filter1.get_all_entries()
+        print(str(len(events1))+" Unwrap events found on destination contract")
+
+        event_filter2 = contract2.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
+        events2 = event_filter2.get_all_entries()
+        print(str(len(events2))+" Deposit events found on source contract")
+
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
 
         # acct = get_account()
