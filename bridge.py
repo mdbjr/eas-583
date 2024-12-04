@@ -94,7 +94,7 @@ def scanBlocks(chain):
         arg_filter = {}
         event_filter = contract1.events.Deposit.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
         events = event_filter.get_all_entries()
-        print('stop')
+        #print('stop')
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
 
         # acct = get_account()
@@ -120,6 +120,68 @@ def scanBlocks(chain):
                 signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.raw_transaction)
 
+    if chain == 'destination':
+        api_url = f"https://api.avax-test.network/ext/bc/C/rpc" #AVAX C-chain testnet
+        with open("contract_info.json", "r") as f:
+            d = json.load(f)
+            d2 = d['source']
+            address2 = d2['address']
+            abi2 = d2['abi']
+            d1 = d['destination']
+            address1 = d1['address']
+            abi1 = d1['abi']
+
+
+        # TODO complete this method
+
+        # The first section will be the same as "connect_to_eth()" but with a BNB url
+        url2 = "https://api.avax-test.network/ext/bc/C/rpc"
+        url1 = "https://bsc-testnet.public.blastapi.io"
+        w3_2 = Web3(HTTPProvider(url2))
+        w3_1 = Web3(HTTPProvider(url1))
+
+        # The second section requires you to inject middleware into your w3 object and
+        # create a contract object. Read more on the docs pages at https://web3py.readthedocs.io/en/stable/middleware.html
+        # and https://web3py.readthedocs.io/en/stable/web3.contract.html
+        w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+        if w3_1.is_connected():
+            print("Connected to BSC Testnet")
+        else:
+            print("Connection failed")
+        contract1 = w3_1.eth.contract(address=address1, abi=abi1)
+        contract2 = w3_2.eth.contract(address=address2, abi=abi2)
+
+        start_block = w3_1.eth.get_block_number()
+        end_block = start_block - 5
+        arg_filter = {}
+        event_filter = contract1.events.Unwrap.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
+        events = event_filter.get_all_entries()
+        #print('stop')
+        sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
+
+        # acct = get_account()
+        acct = w3_2.eth.account.from_key(sk)
+        if len(events)>0:
+            for event in events:
+                event_dict = {'chain': chain,
+                              'token': event['args']['token'],
+                              'recipient': event['args']['recipient'],
+                              'amount': event['args']['amount'],
+                              'transactionHash': event['transactionHash'],
+                              'address': event['address']}
+                tx_raw = contract2.functions.withdraw(event_dict['token'], event_dict['recipient'],
+                                                  event_dict['amount']).build_transaction({
+                    # "proof": proof,
+                    # "leaf": random_leaf,
+                    # "to": contract.address,
+                    "from": address1,
+                    "nonce": w3_1.eth.get_transaction_count(address1),
+
+                })
+
+                signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
+                tx_hash = w3_2.eth.send_raw_transaction(signed_tx.raw_transaction)
 
 
 
