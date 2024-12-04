@@ -89,8 +89,8 @@ def scanBlocks(chain):
             print("Connected to Avax Testnet")
         else:
             print("Connection failed")
-        contract1 = w3_1.eth.contract(address=address2, abi=abi2)
-        contract2 = w3_2.eth.contract(address=address1, abi=abi1)
+        contract1 = w3_1.eth.contract(address=address2, abi=abi1)
+        contract2 = w3_2.eth.contract(address=address1, abi=abi2)
 
         start_block1 = w3_1.eth.get_block_number()
         end_block1 = start_block1 - 5
