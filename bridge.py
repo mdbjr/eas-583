@@ -97,7 +97,11 @@ def scanBlocks(chain):
 
         start_block2 = w3_2.eth.get_block_number()
         end_block2 = start_block2 - 5
-
+        print("SOURCE")
+        print("START BLOCK1 = " + str(start_block1))
+        print("END BLOCK1 = " + str(end_block1))
+        print("START BLOCK2 = " + str(start_block2))
+        print("END BLOCK2 = " + str(end_block2))
         arg_filter = {}
         event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
         events1 = event_filter1.get_all_entries()
