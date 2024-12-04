@@ -89,8 +89,8 @@ def scanBlocks(chain):
             print("Connected to Avax Testnet")
         else:
             print("Connection failed")
-        contract1 = w3_1.eth.contract(address=address2, abi=abi1)
-        contract2 = w3_2.eth.contract(address=address1, abi=abi2)
+        contract1 = w3_1.eth.contract(address=address1, abi=abi1)
+        contract2 = w3_2.eth.contract(address=address2, abi=abi2)
 
         start_block1 = w3_1.eth.get_block_number()
         end_block1 = start_block1 - 5
@@ -104,7 +104,8 @@ def scanBlocks(chain):
         print("END BLOCK2 = " + str(end_block2))
         arg_filter = {}
         print("LISTENING FOR DEPOSITS ON BLOCKS " + str(end_block1) + " to " + str(start_block1))
-        event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
+        #event_filter = contract.events.Deposit.create_filter(fromBlock=start_block, toBlock=end_block,argument_filters=arg_filter)
+        event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1-5, toBlock=start_block1+2, argument_filters=arg_filter)
         events1 = event_filter1.get_all_entries()
         print(str(len(events1)) + " Deposit events found on source contract")
 
@@ -233,4 +234,4 @@ def scanBlocks(chain):
     #    w3 = Web3(Web3.HTTPProvider(api_url))
 
 
-scanBlocks('destination')
+scanBlocks('source')
