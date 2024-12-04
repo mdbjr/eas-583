@@ -100,6 +100,7 @@ def scanBlocks(chain):
         # acct = get_account()
         acct = w3_2.eth.account.from_key(sk)
         if len(events)>0:
+            print(str(len(events))+" events found on source contract")
             for event in events:
                 event_dict = {'chain': chain,
                               'token': event['args']['token'],
@@ -157,7 +158,7 @@ def scanBlocks(chain):
         arg_filter = {}
         event_filter = contract1.events.Unwrap.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
         events = event_filter.get_all_entries()
-        print(str(len(events))+" events found")
+        print(str(len(events))+" events found on destination contract")
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
 
         # acct = get_account()
