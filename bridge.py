@@ -176,7 +176,7 @@ def scanBlocks(chain):
         events1 = event_filter1.get_all_entries()
         print(str(len(events1))+" Unwrap events found on destination contract")
 
-        event_filter2 = contract2.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
+        event_filter2 = contract2.events.Deposit.create_filter(fromBlock=end_block2, toBlock=start_block2, argument_filters=arg_filter)
         events2 = event_filter2.get_all_entries()
         print(str(len(events2))+" Deposit events found on source contract")
 
