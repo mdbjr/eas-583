@@ -201,6 +201,8 @@ def scanBlocks(chain):
                     "nonce": w3_1.eth.get_transaction_count(address1),
 
                 })
+                print('withdrawn token is:')
+                print(event_dict['token'])
 
                 signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.raw_transaction)
