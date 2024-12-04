@@ -184,8 +184,8 @@ def scanBlocks(chain):
 
         # acct = get_account()
         acct = w3_2.eth.account.from_key(sk)
-        if len(events)>0:
-            for event in events:
+        if len(events1)>0:
+            for event in events1:
                 event_dict = {'chain': chain,
                               'token': event['args']['token'],
                               'recipient': event['args']['recipient'],
