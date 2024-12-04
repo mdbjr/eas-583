@@ -157,7 +157,7 @@ def scanBlocks(chain):
         arg_filter = {}
         event_filter = contract1.events.Unwrap.create_filter(fromBlock=end_block, toBlock=start_block, argument_filters=arg_filter)
         events = event_filter.get_all_entries()
-        #print('stop')
+        print(str(len(events))+" events found")
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
 
         # acct = get_account()
@@ -196,4 +196,4 @@ def scanBlocks(chain):
     #    w3 = Web3(Web3.HTTPProvider(api_url))
 
 
-#scanBlocks('source')
+scanBlocks('destination')
