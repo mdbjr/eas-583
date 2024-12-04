@@ -136,7 +136,7 @@ def scanBlocks(chain):
 
         # The first section will be the same as "connect_to_eth()" but with a BNB url
         url2 = "https://api.avax-test.network/ext/bc/C/rpc"
-        url1 = "https://data-seed-prebsc-1-s1.binance.org:8545/"
+        url1 = "https://bsc-testnet.public.blastapi.io"
         w3_2 = Web3(HTTPProvider(url2))
         w3_1 = Web3(HTTPProvider(url1))
 
