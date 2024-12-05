@@ -218,7 +218,7 @@ def scanBlocks(chain):
                 print("UNWRAP EVENT FROM DESTINATION CONTRACT")
                 print(event)
                 event_dict = {'chain': chain,
-                              'token': event['args']['token'],
+                              'token': event['args']['wrapped_token'],
                               'recipient': event['args']['recipient'],
                               'amount': event['args']['amount'],
                               'transactionHash': event['transactionHash'],
