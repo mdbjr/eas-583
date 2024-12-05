@@ -139,6 +139,8 @@ def scanBlocks(chain):
                 })
 
                 signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=acct.key)
+                "SIGNED DEPOSIT TRANSACTION:"
+                print(signed_tx)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.raw_transaction)
 
     if chain == 'destination':
