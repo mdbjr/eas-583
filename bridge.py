@@ -103,6 +103,7 @@ def scanBlocks(chain):
         print("START BLOCK2 = " + str(start_block2))
         print("END BLOCK2 = " + str(end_block2))
         arg_filter = {}
+        print("DESTINATION CONTRACT ADDRESS IS " + address2)
         print("SOURCE CONTRACT ADDRESS IS "+address1)
         print("LISTENING FOR DEPOSITS ON SOURCE CONTRACT AT BLOCKS " + str(end_block1) + " to " + str(start_block1))
         #event_filter = contract.events.Deposit.create_filter(fromBlock=start_block, toBlock=end_block,argument_filters=arg_filter)
@@ -135,7 +136,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+101
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+102
 
                 })
 
@@ -224,8 +225,8 @@ def scanBlocks(chain):
                 print('withdrawn token is:')
                 print(event_dict['token'])
 
-                signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
-                tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
+                #signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
+                #tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
 
 
 
