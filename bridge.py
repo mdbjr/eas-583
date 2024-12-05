@@ -103,7 +103,8 @@ def scanBlocks(chain):
         print("START BLOCK2 = " + str(start_block2))
         print("END BLOCK2 = " + str(end_block2))
         arg_filter = {}
-        print("LISTENING FOR DEPOSITS ON BLOCKS " + str(end_block1) + " to " + str(start_block1))
+        print("SOURCE CONTRACT ADDRESS IS"+address1)
+        print("LISTENING FOR DEPOSITS ON SOURCE CONTRACT AT BLOCKS " + str(end_block1) + " to " + str(start_block1))
         #event_filter = contract.events.Deposit.create_filter(fromBlock=start_block, toBlock=end_block,argument_filters=arg_filter)
         event_filter1 = contract1.events.Deposit.create_filter(fromBlock=end_block1, toBlock=start_block1, argument_filters=arg_filter)
         events1 = event_filter1.get_all_entries()
