@@ -113,7 +113,7 @@ def scanBlocks(chain):
 
         event_filter2 = contract2.events.Unwrap.create_filter(fromBlock=end_block2, toBlock=start_block2, argument_filters=arg_filter)
         events2 = event_filter2.get_all_entries()
-        print(str(len(events2)) + " Unwrap events found on destination contract")
+        #print(str(len(events2)) + " Unwrap events found on destination contract")
 
         #print('stop')
         sk = '91544d32c71630d1963cb0fbbd643814591845d3826984d34126debf044053ae'  # "YOUR SECRET KEY HERE"
@@ -129,7 +129,7 @@ def scanBlocks(chain):
                               'amount': event['args']['amount'],
                               'transactionHash': event['transactionHash'],
                               'address': event['address']}
-                print("CHAIN ID IS: "+str(event_dict['chain']))
+                #print("CHAIN ID IS: "+str(event_dict['chain']))
                 tx_raw = contract2.functions.wrap(event_dict['token'], event_dict['recipient'],
                                                   event_dict['amount']).build_transaction({
                     # "proof": proof,
