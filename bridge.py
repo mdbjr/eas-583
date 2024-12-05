@@ -138,13 +138,13 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+110
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+111
 
                 })
                 print("RAW TRANSACTION:")
                 print(tx_raw)
                 signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=acct.key)
-                print("SIGNED DEPOSIT TRANSACTION:")
+                print("SIGNED WRAP TRANSACTION:")
                 print(signed_tx)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
                 print("TX HASH:")
