@@ -136,7 +136,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+102
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+103
 
                 })
 
@@ -205,25 +205,25 @@ def scanBlocks(chain):
 
         # acct = get_account()
         acct = w3_2.eth.account.from_key(sk)
-        if len(events1)>0:
-            for event in events1:
-                event_dict = {'chain': chain,
-                              'token': event['args']['token'],
-                              'recipient': event['args']['recipient'],
-                              'amount': event['args']['amount'],
-                              'transactionHash': event['transactionHash'],
-                              'address': event['address']}
-                tx_raw = contract2.functions.withdraw(event_dict['token'], event_dict['recipient'],
-                                                  event_dict['amount']).build_transaction({
-                    # "proof": proof,
-                    # "leaf": random_leaf,
-                    # "to": contract.address,
-                    "from": acct.address,
-                    "nonce": w3_1.eth.get_transaction_count(address1)+1,
-
-                })
-                print('withdrawn token is:')
-                print(event_dict['token'])
+        # if len(events1)>0:
+        #     for event in events1:
+        #         event_dict = {'chain': chain,
+        #                       'token': event['args']['token'],
+        #                       'recipient': event['args']['recipient'],
+        #                       'amount': event['args']['amount'],
+        #                       'transactionHash': event['transactionHash'],
+        #                       'address': event['address']}
+        #         tx_raw = contract2.functions.withdraw(event_dict['token'], event_dict['recipient'],
+        #                                           event_dict['amount']).build_transaction({
+        #             # "proof": proof,
+        #             # "leaf": random_leaf,
+        #             # "to": contract.address,
+        #             "from": acct.address,
+        #             "nonce": w3_1.eth.get_transaction_count(address1)+1,
+        #
+        #         })
+        #         print('withdrawn token is:')
+        #         print(event_dict['token'])
 
                 #signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
                 #tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
