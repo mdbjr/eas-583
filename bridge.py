@@ -93,10 +93,10 @@ def scanBlocks(chain):
         contract2 = w3_2.eth.contract(address=address2, abi=abi2)
 
         start_block1 = w3_1.eth.get_block_number()
-        end_block1 = start_block1 - 50
+        end_block1 = start_block1 - 5
 
         start_block2 = w3_2.eth.get_block_number()
-        end_block2 = start_block2 - 50
+        end_block2 = start_block2 - 5
         print("SOURCE")
         print("START BLOCK1 = " + str(start_block1))
         print("END BLOCK1 = " + str(end_block1))
