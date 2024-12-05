@@ -74,8 +74,10 @@ def scanBlocks(chain):
         # The first section will be the same as "connect_to_eth()" but with a BNB url
         url1 = "https://api.avax-test.network/ext/bc/C/rpc"
         url2 = "https://data-seed-prebsc-1-s1.binance.org:8545/"
-        w3_1 = Web3(HTTPProvider(url1))
-        w3_2 = Web3(HTTPProvider(url2))
+        #w3_1 = Web3(HTTPProvider(url1))
+        #w3_2 = Web3(HTTPProvider(url2))
+        w3_1 = Web3()
+        w3_2 = Web3()
 
         w3_1.middleware_onion.inject(geth_poa_middleware, layer=0)
         w3_2.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -138,7 +140,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+118
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+120
 
                 })
                 print("RAW WRAP TRANSACTION:")
