@@ -138,7 +138,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+114
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+115
 
                 })
                 print("RAW WRAP TRANSACTION:")
@@ -148,7 +148,8 @@ def scanBlocks(chain):
                 print(signed_tx)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
                 print("WRAP TX HASH:")
-                print(tx_hash)
+                print(type(tx_hash))
+                print(bytes.fromhex(tx_hash).decode('utf-8'))
 
     if chain == 'destination':
         api_url = f"https://api.avax-test.network/ext/bc/C/rpc" #AVAX C-chain testnet
