@@ -219,7 +219,7 @@ def scanBlocks(chain):
                 print(event)
                 event_dict = {'chain': chain,
                               'token': event['args']['wrapped_token'],
-                              'recipient': event['args']['recipient'],
+                              'recipient': event['args']['to'],
                               'amount': event['args']['amount'],
                               'transactionHash': event['transactionHash'],
                               'address': event['address']}
