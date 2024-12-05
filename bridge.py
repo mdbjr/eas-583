@@ -138,16 +138,16 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+111
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+112
 
                 })
-                print("RAW TRANSACTION:")
+                print("RAW WRAP TRANSACTION:")
                 print(tx_raw)
                 signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=acct.key)
                 print("SIGNED WRAP TRANSACTION:")
                 print(signed_tx)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
-                print("TX HASH:")
+                print("WRAP TX HASH:")
                 print(tx_hash)
 
     if chain == 'destination':
@@ -222,7 +222,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_1.eth.get_transaction_count(address1)+1,
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+1,
 
                 })
                 print('withdrawn token is:')
