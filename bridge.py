@@ -215,6 +215,8 @@ def scanBlocks(chain):
         acct = w3_2.eth.account.from_key(sk)
         if len(events1)>0:
             for event in events1:
+                print("UNWRAP EVENT FROM DESTINATION CONTRACT")
+                print(event)
                 event_dict = {'chain': chain,
                               'token': event['args']['token'],
                               'recipient': event['args']['recipient'],
@@ -233,8 +235,8 @@ def scanBlocks(chain):
                 print('withdrawn token is:')
                 print(event_dict['token'])
 
-                #signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
-                #tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
+                signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
+                tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
 
 
 
