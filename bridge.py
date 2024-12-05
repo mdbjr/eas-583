@@ -128,6 +128,7 @@ def scanBlocks(chain):
                               'amount': event['args']['amount'],
                               'transactionHash': event['transactionHash'],
                               'address': event['address']}
+                print("CHAIN ID IS: "+str(event_dict['chain']))
                 tx_raw = contract2.functions.wrap(event_dict['token'], event_dict['recipient'],
                                                   event_dict['amount']).build_transaction({
                     # "proof": proof,
@@ -135,6 +136,7 @@ def scanBlocks(chain):
                     # "to": contract.address,
                     "from": acct.address,
                     "nonce": w3_2.eth.get_transaction_count(acct.address)+100,
+                    'chainId': event_dict['chain']
 
                 })
 
@@ -142,7 +144,7 @@ def scanBlocks(chain):
                 "SIGNED DEPOSIT TRANSACTION:"
                 print(signed_tx)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.rawTransaction)
-                "TX HASH:"
+                print("TX HASH:")
                 print(tx_hash)
 
     if chain == 'destination':
