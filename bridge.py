@@ -123,6 +123,7 @@ def scanBlocks(chain):
         if len(events1)>0:
 
             for event in events1:
+                print("CALLING WRAP ON DESTINATION CONTRACT")
                 event_dict = {'chain': chain,
                               'token': event['args']['token'],
                               'recipient': event['args']['recipient'],
@@ -136,7 +137,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+108
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+109
 
                 })
                 print("RAW TRANSACTION:")
