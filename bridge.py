@@ -120,6 +120,7 @@ def scanBlocks(chain):
 
         # acct = get_account()
         acct = w3_2.eth.account.from_key(sk)
+        print("DESTINATION AND SOURCE CONTRACTS DEPLOYED FROM "+acct.address)
         if len(events1)>0:
 
             for event in events1:
@@ -137,7 +138,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+109
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+110
 
                 })
                 print("RAW TRANSACTION:")
