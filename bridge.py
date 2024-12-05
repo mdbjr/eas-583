@@ -62,10 +62,10 @@ def scanBlocks(chain):
         with open("contract_info.json", "r") as f:
             d = json.load(f)
             d1 = d['source']
-            address1 = d1['address']
+            address1 = '0x87D6e51834876F86ac7E30E7dEb5e9c9BF3540BF'#d1['address']
             abi1 = d1['abi']
             d2 = d['destination']
-            address2 = d2['address']
+            address2 = '0xfDAD8baF7B9d2690F13F02aD4e28bC89A972446b'#d2['address']
             abi2 = d2['abi']
 
 
