@@ -133,12 +133,12 @@ def scanBlocks(chain):
                               'address': event['address']}
                 #print("CHAIN ID IS: "+str(event_dict['chain']))
                 tx_raw = contract2.functions.wrap(event_dict['token'], event_dict['recipient'],
-                                                  event_dict['amount']).buildTransaction({
+                                                  event_dict['amount']).build_transaction({
                     # "proof": proof,
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_2.eth.get_transaction_count(acct.address)+113
+                    "nonce": w3_2.eth.get_transaction_count(acct.address)+114
 
                 })
                 print("RAW WRAP TRANSACTION:")
