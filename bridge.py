@@ -134,7 +134,7 @@ def scanBlocks(chain):
                     # "leaf": random_leaf,
                     # "to": contract.address,
                     "from": acct.address,
-                    "nonce": w3_1.eth.get_transaction_count(address1)+14,
+                    "nonce": w3_2.eth.get_transaction_count(address2)+1,
 
                 })
 
