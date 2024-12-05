@@ -138,7 +138,7 @@ def scanBlocks(chain):
 
                 })
 
-                signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=sk)
+                signed_tx = w3_2.eth.account.sign_transaction(tx_raw, private_key=acct.key)
                 tx_hash = w3_2.eth.send_raw_transaction(signed_tx.raw_transaction)
 
     if chain == 'destination':
@@ -146,9 +146,9 @@ def scanBlocks(chain):
         with open("contract_info.json", "r") as f:
             d = json.load(f)
             d2 = d['source']
-            address2 = d2['address']
+            address2 = '0x87D6e51834876F86ac7E30E7dEb5e9c9BF3540BF'#d2['address']
             abi2 = d2['abi']
-            d1 = d['destination']
+            d1 = '0xfDAD8baF7B9d2690F13F02aD4e28bC89A972446b'#d['destination']
             address1 = d1['address']
             abi1 = d1['abi']
 
